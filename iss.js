@@ -41,12 +41,51 @@ const fetchMyIP = function(callback) {
       }
       // console.log(JSON.parse(data).ip);
       let ip = JSON.parse(data).ip;
-
+      // return ip;
       callback(null, ip);
     }
 
   });
 
 };
-module.exports = { fetchMyIP };
+// function fetchCoordsByIP takes in a string(ip) and a function(callback)
+//  and returns the lattitud logitude object
+// const ip = '72.140.151.173';
+
+const fetchCoordsByIP = (ip, callback) => {
+  request(`https://freegeoip.app/json/${ip}`, (err, returned,data) => {
+    if (err) {
+      console.log(`there is err`);
+      console.log(err);
+      return callback(err,null);
+    } else {
+      if (returned.statusCode !== 200) {
+        callback(Error(`Status Code ${returned.statusCode} when fetching IP: ${data}`), null);
+        // console.log(returned);
+        return;
+      }
+      // console.log(JSON.parse(data).ip);
+      let coords = JSON.parse(data);
+      // return ip;
+      callback(null, coords);
+    }
+
+  });
+};
+
+// fetchCoordsByIP(ip, (x, coords) => {
+//   if (x) {
+//     console.log(`there is err`);
+//     console.log(x);
+//     return;
+//   }
+//   // console.log(coords.latitude);
+//   // console.log(coords.longitude);
+//   return {
+//     latitude : coords.latitude,
+//     longitude : coords.longitude
+//   };
+// });
+
+module.exports = { fetchMyIP, fetchCoordsByIP };
 
